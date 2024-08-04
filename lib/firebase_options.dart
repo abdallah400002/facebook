@@ -52,6 +52,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '19280037862',
     projectId: 'facebook-17c8c',
     authDomain: 'facebook-17c8c.firebaseapp.com',
+    databaseURL: 'https://facebook-17c8c-default-rtdb.firebaseio.com',
     storageBucket: 'facebook-17c8c.appspot.com',
     measurementId: 'G-LXS81Y87SE',
   );
@@ -61,6 +62,7 @@ class DefaultFirebaseOptions {
     appId: '1:19280037862:android:3c597aaab6b9b7ee4d3827',
     messagingSenderId: '19280037862',
     projectId: 'facebook-17c8c',
+    databaseURL: 'https://facebook-17c8c-default-rtdb.firebaseio.com',
     storageBucket: 'facebook-17c8c.appspot.com',
   );
 
@@ -69,7 +71,9 @@ class DefaultFirebaseOptions {
     appId: '1:19280037862:ios:18f6e63ed396fd344d3827',
     messagingSenderId: '19280037862',
     projectId: 'facebook-17c8c',
+    databaseURL: 'https://facebook-17c8c-default-rtdb.firebaseio.com',
     storageBucket: 'facebook-17c8c.appspot.com',
     iosBundleId: 'com.example.facebook',
   );
+
 }

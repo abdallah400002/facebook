@@ -7,7 +7,6 @@ import 'package:firebase_auth_web/firebase_auth_web.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

