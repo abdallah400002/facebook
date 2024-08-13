@@ -1,11 +1,11 @@
 {
-    "name": "facebook",
-    "short_name": "facebook",
+    "name": "Facebook",
+    "short_name": "Facebook",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Log into Facebook to start sharing and connecting with your friends, family, and people you know.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

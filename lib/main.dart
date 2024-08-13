@@ -19,7 +19,9 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return const MaterialApp(
+    return  MaterialApp(
+      title: "Facebook",
+      onGenerateTitle: (context) =>'Facebook' ,
       debugShowCheckedModeBanner: false,
       home: Loginpage(),
     );
